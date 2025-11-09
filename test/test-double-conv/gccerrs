@@ -1,0 +1,4 @@
+test/test-double-conv/gen.c: In function ‘main’:
+test/test-double-conv/gen.c:3:13: warning: variable ‘y’ set but not used [-Wunused-but-set-variable]
+    3 |   double x, y;
+      |             ^
