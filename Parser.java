@@ -147,14 +147,71 @@ public class Parser {
 
 	/**
 	 * Parses a Statement, matching the 'stmt' grammar rule: assn ';'.
-	 * @return A NodeStmt object.
+	 * @return A Node object.
 	 * @throws SyntaxException If the statement structure is invalid.
 	 */	
-	private NodeStmt parseStmt() throws SyntaxException {
+	private Node parseStmt() throws SyntaxException {
+		// NodeAssn assn = parseAssn();
+		// match(";");
+		// Node stmt = new NodeStmt(assn);
+		// return stmt;
+
+
+
+
+		// added parsing for the new statements for new grammar for TA2
+
+		//check for rd stmt
+		if (curr().equals(new Token("rd"))) {
+        	match("rd");
+        	Token id = curr();
+        	match("id");
+        	return new NodeStmtRd(pos(), id.lex());
+    	}
+
+		//check for wr stmt
+		if (curr().equals(new Token("wr"))) {
+			match("wr");
+			NodeExpr expr = parseExpr();
+			return new NodeStmtWr(expr);
+		}
+
+		//check for if stmt
+		if (curr().equals(new Token("if"))) {
+			match("if");
+			NodeBoolExpr boolExpr = parseBoolExpr();
+			match("then");
+			Node thenStmt = parseStmt();
+
+			// check for else stmt
+			if (curr().equals(new Token("else"))) {
+				match("else");
+				Node elseStmt = parseStmt();
+				return new NodeStmtIf(boolExpr, thenStmt, elseStmt);
+			}
+			return new NodeStmtIf(boolExpr, thenStmt); // without else
+		}
+
+		//check for while stmt
+		if (curr().equals(new Token("while"))) {
+			match("while");
+			NodeBoolExpr boolExpr = parseBoolExpr();
+			match("do");
+			Node doStmt = parseStmt();
+			return new NodeStmtWhile(boolExpr, doStmt);
+		}
+
+		//check for begin and end block
+		if (curr().equals(new Token("begin"))) {
+			match("begin");
+			NodeBlock beginBlock = parseBlock();
+			match("end");
+			return beginBlock;
+		}
+
+		// if no statement match then its an assignment
 		NodeAssn assn = parseAssn();
-		match(";");
-		NodeStmt stmt = new NodeStmt(assn);
-		return stmt;
+		return assn;
 	}
 
 	/**
@@ -167,9 +224,72 @@ public class Parser {
 	public Node parse(String program) throws SyntaxException {
 		scanner = new Scanner(program);
 		scanner.next();
-		NodeStmt stmt = parseStmt();
+		NodeProg prog = parseProg();
 		match("EOF");
-		return stmt;
+		return prog;
 	}
+
+
+	// Added methods for TA2
+
+	public NodeRelop parseRelop() throws SyntaxException {
+		if (curr().equals(new Token("<"))) {
+			match("<");
+			return new NodeRelop(pos(), "<");
+		}
+		if (curr().equals(new Token(">"))) {
+			match(">");
+			return new NodeRelop(pos(), ">");
+		}
+		if (curr().equals(new Token("<="))) {
+			match("<=");
+			return new NodeRelop(pos(), "<=");
+		}
+		if (curr().equals(new Token(">="))) {
+			match(">=");
+			return new NodeRelop(pos(), ">=");
+		}
+		if (curr().equals(new Token("=="))) {
+			match("==");
+			return new NodeRelop(pos(), "==");
+		}
+		if (curr().equals(new Token("<>"))) {
+			match("<>");
+			return new NodeRelop(pos(), "<>");
+		}
+		return null;
+	}
+
+	public NodeBoolExpr parseBoolExpr() throws SyntaxException {
+		NodeExpr left = parseExpr();
+		NodeRelop relop = parseRelop();
+		NodeExpr right = parseExpr();
+		return new NodeBoolExpr(left, relop, right);
+	}
+
+
+	public NodeBlock parseBlock() throws SyntaxException {
+		NodeBlock block = new NodeBlock();
+		Node stmt = parseStmt();
+		block.add(stmt);
+		while (curr().equals(new Token(";"))) {
+			match(";");
+
+			// check for end of block
+			if (curr().equals(new Token("end")) || curr().equals(new Token("EOF"))) {
+				break;
+			}
+			stmt = parseStmt();
+			block.add(stmt);
+		}
+		return block;
+	}
+
+	public NodeProg parseProg() throws SyntaxException {
+		NodeBlock block = parseBlock();
+		return new NodeProg(block);
+	}
+
+
 
 }

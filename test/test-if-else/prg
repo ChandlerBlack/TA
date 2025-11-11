@@ -1,0 +1,7 @@
+begin
+  rd x;
+  if x > 0 then
+    wr x
+  else
+    wr -x
+end
