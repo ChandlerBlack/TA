@@ -11,17 +11,20 @@ public class NodeAssn extends Node {
 
 	/**
 	 * Interprets the assignment statement. 
-	 * It evaluates the expression, puts the value into the environment, and prints the result.
+	 * It evaluates the expression, puts the value into the environment
 	 * @param env The environment for variable storage.
 	 * @return The value assigned.
 	 * @throws EvalException If the expression evaluation fails.
 	 */	
 	public double eval(Environment env) throws EvalException {
-		return env.put(id, new NodeWr(expr).eval(env));
+		// return env.put(id, new NodeWr(expr).eval(env));
+		double val = expr.eval(env);
+		return env.put(id,val);
 	}
 
 	public String code() {
-		return id + "=" + expr.code() + ";" + new NodeWr(expr).code();
+		// return id + "=" + expr.code() + ";" + new NodeWr(expr).code();
+		return id + " = " + expr.code() + ";";
 	}
 
 }

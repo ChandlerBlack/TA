@@ -1,1 +1,4 @@
-x = 1+2;
+begin 
+    x = 1+2;
+    wr x
+end

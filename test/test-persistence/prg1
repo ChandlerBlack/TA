@@ -1,1 +1,4 @@
-x = 10;
+begin 
+    x = 10;
+    wr x
+end

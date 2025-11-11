@@ -1,7 +1,0 @@
-test/test-unary-minus/gen.c: In function ‘main’:
-test/test-unary-minus/gen.c:3:16: warning: variable ‘z’ set but not used [-Wunused-but-set-variable]
-    3 |   double x, y, z;
-      |                ^
-test/test-unary-minus/gen.c:3:13: warning: variable ‘y’ set but not used [-Wunused-but-set-variable]
-    3 |   double x, y, z;
-      |             ^

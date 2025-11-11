@@ -16,4 +16,8 @@ public class NodeStmtWr extends Node {
         return value;
 
     }
+
+    public String code() {
+        return "printf(\"%g\\n\", (double)(" + expr.code() + "));";
+    } 
 }

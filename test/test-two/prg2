@@ -1,1 +1,4 @@
-y = x+3;
+begin 
+    x = x+3;
+    wr x 
+end

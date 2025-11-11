@@ -1,1 +1,4 @@
-y = x * 2;
+begin
+    y = x * 2;
+    wr y
+end

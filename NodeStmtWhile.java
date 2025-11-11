@@ -18,6 +18,6 @@ public class NodeStmtWhile extends Node {
     public String code() {
         return "while (" + boolExpr.code() + ") {\n" + 
                stmt.code() + "\n" +
-               "};)";
+               "}";
     }
 }
